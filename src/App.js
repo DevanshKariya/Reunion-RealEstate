@@ -13,7 +13,7 @@ import {
 } from "./utils/filterData";
 
 export default function App() {
-  const [propertyData, setPropertyData] = React.useState({});
+  const [propertyData, setPropertyData] = React.useState([]);
   const [searchFilters, setSearchFilters] = React.useState(false);
   const [filterVal, setFilterVal] = React.useState({
     rentFrequency: "",
@@ -38,7 +38,7 @@ export default function App() {
       options
     )
       .then((response) => response.json())
-      .then((data) => setPropertyData(data))
+      .then(({ hits }) => setPropertyData(hits))
       .catch((err) => console.error(err));
   }, [filterVal]);
 
@@ -55,20 +55,22 @@ export default function App() {
 
   console.log(propertyData);
 
-  const propertyCard = propertyData.hits.map((property) => {
+  // const { hits } = propertyData;
+
+  const propertyCard = propertyData.map((prop) => {
     return (
       <Property
-        coverPhoto={property.coverPhoto}
-        price={property.price}
-        rentFrequency={property.rentFrequency}
-        rooms={property.rooms}
-        title={property.title}
-        baths={property.baths}
-        area={property.area}
-        agency={property.agency}
-        isVerified={property.isVerified}
-        externalID={property.externalID}
-        key={property.id}
+        coverPhoto={prop.coverPhoto}
+        price={prop.price}
+        rentFrequency={prop.rentFrequency}
+        rooms={prop.rooms}
+        title={prop.title}
+        baths={prop.baths}
+        area={prop.area}
+        agency={prop.agency}
+        isVerified={prop.isVerified}
+        externalID={prop.externalID}
+        key={prop.id}
       />
     );
   });
@@ -188,7 +190,7 @@ export default function App() {
         Properties for-rent
       </Text>
       <Flex flexWrap="wrap">{propertyCard}</Flex>
-      {propertyData.hits.length === 0 && (
+      {propertyData.length === 0 && (
         <Flex justifyContent="center" alignItems="center">
           <img alt="no result" src="./images/noResult.svg" />
           <Text fontSize="2xl" marginTop="3">
